@@ -11,33 +11,50 @@
  */
 class Solution {
 public:
-    int countSwap(vector<int>& arr){
-    map<int, int> reverseIndex;
-    for(int i = 0; i < arr.size(); ++i) reverseIndex[arr[i]] = i;
-    int i = 0, ans = 0;
-    for(auto [k,v] : reverseIndex){
-        if(v == i) { i++; continue; }
-        reverseIndex[arr[i]] = v;
-        swap(arr[i], arr[v]);
-        ans++; i++;
+    int minSwaps(vector<int> arr, int n){
+    pair<int, int> arrPos[n];
+    for (int i = 0; i < n; i++)
+    {
+        arrPos[i].first = arr[i];
+        arrPos[i].second = i;
     }
-    return ans;
-}
-
-int minimumOperations(TreeNode* root) {
+    sort(arrPos, arrPos + n);
+    vector<bool> vis(n, false);
     int ans = 0;
-    queue<TreeNode*> q;
-    q.push(root);
-    while(q.size()){
-        vector<int> arr;
-        for(int n = q.size(); n > 0; --n){
-            TreeNode* node = q.front(); q.pop();
-            arr.push_back(node->val);
-            if(node->left) q.push(node->left);
-            if(node->right) q.push(node->right);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (vis[i] || arrPos[i].second == i) continue;
+        int cycle_size = 0;
+        int j = i;
+        while (!vis[j])
+        {
+            vis[j] = 1;
+            j = arrPos[j].second;
+            cycle_size++;
         }
-        ans += countSwap(arr);
+        if (cycle_size > 0)
+            ans += (cycle_size - 1);
     }
     return ans;
 }
+    int minimumOperations(TreeNode* root) {
+        queue<TreeNode* >q;
+        q.push(root);
+        int ans=0;
+        while(!q.empty()){
+            vector<int>v;
+            int s=q.size();
+            for(int i=0;i<s;i++){
+                TreeNode* temp=q.front();
+                q.pop();
+                v.push_back(temp->val);
+                if(temp->left!=NULL)q.push(temp->left);
+                if(temp->right!=NULL)q.push(temp->right);
+            }
+            ans+=minSwaps(v,v.size());
+            v.clear();
+        }
+        return ans;
+    }
 };
