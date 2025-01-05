@@ -1,14 +1,16 @@
 class Solution {
 public:
     int rob(vector<int>& nums) {
-        int rob = 0;
-        int norob = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            int newRob = norob + nums[i];
-            int newNoRob = max(norob, rob);
-            rob = newRob;
-            norob = newNoRob;
+        const int len = nums.size();
+        //vector<int> table(nums);
+        int a = 0;
+        int b = 0;
+        int c;
+        for(int i = 0; i < len; i++) {
+            c = max( nums[i] + a, b);
+            a = b;
+            b = c;
         }
-        return max(rob, norob);
+        return c;
     }
 };
