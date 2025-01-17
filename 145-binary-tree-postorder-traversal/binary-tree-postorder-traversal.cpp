@@ -10,34 +10,34 @@
  * right(right) {}
  * };
  */
-
 class Solution {
+    stack<TreeNode*> st;
+
 public:
     vector<int> postorderTraversal(TreeNode* root) {
-        stack<TreeNode*> stk;
-        stack<TreeNode*> stk2;
-        TreeNode* current = root;
-        if (current)
-            stk.push(current);
+        vector<int> ans;
+        TreeNode* iter = root; // for inserting nodes
+        TreeNode *topNode = nullptr, *prevInserted = nullptr; /*to check for
+              right subtrees inserted yet or not*/
 
-        while (!stk.empty()) {
-            current = stk.top();
-            stk.pop();
-            stk2.push(current);
-
-            if (current->left) {
-                stk.push(current->left);
+        while (iter != nullptr || !st.empty()) {
+            if (iter !=nullptr) {
+                st.push(iter);
+                iter = iter->left;
             }
-            if (current->right) {
-                stk.push(current->right);
+            else {
+                topNode =st.top(); 
+                if (topNode->right != nullptr &&
+                    topNode->right != prevInserted) {
+                    iter = topNode->right;
+                } else /*both left and right subtrees of this node traversed so insert it in postorder traversal*/
+                {
+                    ans.push_back(topNode->val);
+                    prevInserted = topNode;
+                    st.pop();
+                }
             }
         }
-
-        vector<int> vec;
-        while (!stk2.empty()) {
-            vec.push_back(stk2.top()->val);
-            stk2.pop();
-        }
-        return vec;
+        return ans;
     }
 };
