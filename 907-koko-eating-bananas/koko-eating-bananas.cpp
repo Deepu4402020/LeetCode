@@ -1,18 +1,10 @@
 class Solution {
 public:
-    int maximum(vector<int> p){
-        int maxi=0;
-        for(auto it:p){
-            if(it>maxi){
-              maxi=it;
-            }
-        }
-        return maxi;
-    }
+   
     int minEatingSpeed(vector<int>& piles, int h) {
         int i=1;int ans=1;
         if(piles.size()==1) ceil(h/piles[0]);
-        int j=maximum(piles);
+        int j=*max_element(piles.begin(),piles.end());
         
         while(i<=j){
             int mid=(i+j)/2;
