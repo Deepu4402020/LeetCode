@@ -1,22 +1,15 @@
 class Solution {
 public:
+// Optimal-- TC-> O(n), SC->O(1)
     int numberOfSubstrings(string s) {
-        int a = 0, b = 0, c = 0;  
-        int st = 0, ans = 0;  
-
-        for (int right = 0; right < s.length(); right++) {
-            if (s[right] == 'a') a++;
-            if (s[right] == 'b') b++;
-            if (s[right] == 'c') c++;
-
-            while (a > 0 && b > 0 && c > 0) {
-                ans += s.length() - right; 
-                if (s[st] == 'a') a--;
-                if (s[st] == 'b') b--;
-                if (s[st] == 'c') c--;
-                st++;  
+        int hash[3] = {-1,-1,-1};
+        int cnt =0;
+        for(int i=0; i<s.size(); i++){
+            hash[s[i]-'a'] =i;
+            if(hash[0]!=-1 && hash[1]!=-1 && hash[2]!= -1){
+                cnt += 1 + min(min(hash[0],hash[1]),hash[2]);
             }
         }
-        return ans;
+        return cnt;
     }
 };
