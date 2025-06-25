@@ -1,7 +1,7 @@
 class Solution {
   public:
-    bool checkcycle(int i, vector<int>& visited, vector<vector<int>>& adj) {
-        visited[i] = 1;
+    bool checkcycle(int i, vector<int>& v, vector<vector<int>>& adj) {
+        v[i] = 1;
         queue<pair<int, int>> q;
         q.push({i, -1});
 
@@ -10,12 +10,12 @@ class Solution {
             int parent = q.front().second;
             q.pop();
 
-            for (int neighbor : adj[node]) {
-                if (!visited[neighbor]) {
-                    visited[neighbor] = 1;
-                    q.push({neighbor, node});
-                } else if (neighbor != parent) {
-                    return true;  // Cycle detected
+            for (int neig : adj[node]) {
+                if (!v[neig]) {
+                    v[neig] = 1;
+                    q.push({neig, node});
+                } else if (neig != parent) {
+                    return true;  
                 }
             }
         }
@@ -34,11 +34,11 @@ class Solution {
             adj[v].push_back(u);
         }
 
-        vector<int> visited(V, 0);
+        vector<int> v(V, 0);
 
         for (int i = 0; i < V; ++i) {
-            if (!visited[i]) {
-                if (checkcycle(i, visited, adj)) {
+            if (!v[i]) {
+                if (checkcycle(i, v, adj)) {
                     return true;
                 }
             }
