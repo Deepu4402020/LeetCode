@@ -1,22 +1,22 @@
 class Solution {
 public:
-    long long solve(int i, const vector<int>& nums, vector<vector<long long>>& memo, bool flag) {
-        if (i >= nums.size())
-            return 0;
+    // BOTTOM UP APPROACH
+    //int dp[n+1][2];
+    long long solve(vector<int>& nums) {
+      int n=nums.size();
+             vector<vector<long long>> dp(n, vector<long long>(2, 0));//0-> will be at even ,1-> elemnt would come at odd
+      
+      dp[0][0]=nums[0];
+      dp[0][1]=0;
+      for(int i=1;i<n;i++){
+        //taken
+        dp[i][0]=max(dp[i-1][1]+nums[i],dp[i-1][0]);
 
-        if (memo[i][flag] != -1)
-            return memo[i][flag];
-
-        long long val = flag ? nums[i] : -1LL * nums[i];
-
-        long long take = solve(i + 1, nums, memo, !flag) + val;
-        long long skip = solve(i + 1, nums, memo, flag);
-
-        return memo[i][flag] = max(take, skip);
-    }
-
+        dp[i][1]=max(dp[i-1][0]-nums[i],dp[i-1][1]);
+      }
+      return max(dp[n-1][0],dp[n-1][1]);
+    } 
     long long maxAlternatingSum(vector<int>& nums) {
-        vector<vector<long long>> memo(nums.size() + 1, vector<long long>(2, -1));
-        return solve(0, nums, memo, true); // true -> +ve, false -> -ve
+        return solve(nums);
     }
 };
