@@ -1,26 +1,21 @@
 class Solution {
 public:
-    // Recursion + Memoization
-    int solve(vector<int>& nums, int i, int prev_idx, vector<vector<int>>& memo) {
-        int n = nums.size();
-        if (i >= n) return 0;
-
-        if (memo[i][prev_idx + 1] != -1) 
-            return memo[i][prev_idx + 1];
-
-        int taken = 0;
-        if (prev_idx == -1 || nums[i] > nums[prev_idx]) {
-            taken = 1 + solve(nums, i + 1, i, memo);
+    int solve(vector<int>& nums,vector<int>&t){
+        int maxlen=1;
+        for(int i=0;i<nums.size();i++){
+            for(int j=0;j<=i;j++){
+                if(nums[i]>nums[j]){
+                    t[i]=max(t[j]+1,t[i]);
+                    maxlen=max(maxlen,t[i]);
+                }
+            }
         }
-        int skip = solve(nums, i + 1, prev_idx, memo);
-
-        return memo[i][prev_idx + 1] = max(skip, taken);
+        return maxlen;
     }
-
+    
+    
     int lengthOfLIS(vector<int>& nums) {
-        int n = nums.size();
-
-        vector<vector<int>> memo(n, vector<int>(n + 1, -1));
-        return solve(nums, 0, -1, memo);
+        vector<int> t(nums.size(),1); // smallest size would be 1 as himslef as sebsequence
+        return solve(nums,t);
     }
 };
