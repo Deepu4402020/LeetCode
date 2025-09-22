@@ -11,7 +11,7 @@ public:
 
         // Select
         int take = (prevSel_idx == -1 || pairs[prevSel_idx][1] < pairs[i][0])
-                   ? 1 + solve(i+1, pairs, memo, i) : 0;
+                   ? 1 + solve(i+1, pairs, memo, i) : solve(i+1, pairs, memo, prevSel_idx);
 
         // Skip
         int skip = solve(i+1, pairs, memo, prevSel_idx);
@@ -21,7 +21,7 @@ public:
 
     int findLongestChain(vector<vector<int>>& pairs) {
         sort(pairs.begin(), pairs.end());  
-        
+
         int n = pairs.size();
         vector<vector<int>> memo(n, vector<int>(n+1, -1));
         return solve(0, pairs, memo, -1);
