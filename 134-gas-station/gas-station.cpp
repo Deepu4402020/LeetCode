@@ -1,19 +1,27 @@
 class Solution {
 public:
     int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
-        int n = gas.size();
-        int total_surplus = 0;
-        int surplus = 0;
+        int totalGas = 0, totalCost = 0;
+        for (int i = 0; i < gas.size(); i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+        }
+
+        if (totalGas < totalCost) {
+            return -1;
+        }
+
+        int currentGas = 0;
         int start = 0;
-        
-        for(int i = 0; i < n; i++){
-            total_surplus += gas[i] - cost[i];
-            surplus += gas[i] - cost[i];
-            if(surplus < 0){
-                surplus = 0;
+
+        for (int i = 0; i < gas.size(); i++) {
+            currentGas += gas[i] - cost[i];
+            if (currentGas < 0) {
+                currentGas = 0;
                 start = i + 1;
             }
         }
-        return (total_surplus < 0) ? -1 : start;
+
+        return start;        
     }
 };
