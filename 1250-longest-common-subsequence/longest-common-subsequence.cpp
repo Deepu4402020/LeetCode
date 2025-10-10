@@ -1,30 +1,25 @@
 class Solution {
 public:
-    int memo[1001][1001];
-    int m, n;
-
-    int solve(string& s, string& t) {
-        // Initialize first row and column to 0
-        for (int i = 0; i <= m; i++) memo[i][0] = 0;
-        for (int j = 0; j <= n; j++) memo[0][j] = 0;
-
-       // i ,j are length so index would be i-1,j-1
-        for (int i = 1; i <= m; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (s[i - 1] == t[j - 1]) {
-                    memo[i][j] = 1 + memo[i - 1][j - 1]; // take match
+    int longestCommonSubsequence(string s1, string s2) {
+        int m = s1.length();
+        int n = s2.length();
+        
+        vector<vector<int>> t(m+1, vector<int>(n+1));
+        
+        //t[i][j] = LCS length of s1[0...i-1] and s2[0...j-1]
+        
+        for(int i = 0; i <= m; i++) {
+            for(int j = 0; j <= n; j++) {
+                if(i == 0 || j == 0) {
+                    t[i][j] = 0;
+                } else if(s1[i-1] == s2[j-1]) {
+                    t[i][j] = 1 + t[i-1][j-1];
                 } else {
-                    memo[i][j] = max(memo[i - 1][j], memo[i][j - 1]); // skip
+                    t[i][j] = max(t[i][j-1], t[i-1][j]);
                 }
             }
         }
-
-        return memo[m][n]; 
-    }
-
-    int longestCommonSubsequence(string s, string t) {
-        m = s.size();
-        n = t.size();
-        return solve(s, t);
+        
+        return t[m][n];
     }
 };
