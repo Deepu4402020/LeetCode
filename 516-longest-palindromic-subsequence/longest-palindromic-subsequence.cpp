@@ -1,23 +1,23 @@
 class Solution {
 public:
-    int t[1001][1001];
-    int solve(string& s, int i, int j) {
-        if(i==j)return 1;
-        if (i > j)
-            return 0;
-
-        if (t[i][j] != -1)
-            return t[i][j];
-
-        if (s[i] == s[j]) {
-            return t[i][j] = 2 + solve(s, i + 1, j - 1);
-        }
-
-        return t[i][j] = max(solve(s, i, j - 1), solve(s, i + 1, j));
-    }
-
     int longestPalindromeSubseq(string s) {
-        memset(t, -1, sizeof(t));
-        return solve(s, 0, s.size() - 1);
+        int n=s.size();
+        vector<vector<int>> t(n+1,vector<int>(n+1,0));
+        //State t[i][j]-> i s j idx tak max subsequence
+        for(int i=0;i<n;i++){
+            t[i][i]=1;
+        }
+        for(int l=2;l<=n;l++){//length
+            for(int i=0;i+l-1<n;i++){ //starting point
+            int e=i+l-1;
+                if(s[i]==s[e]){
+                    t[i][e]=2+t[i+1][e-1];
+                }
+                else{
+                    t[i][e]=max(t[i+1][e],t[i][e-1]);
+                }
+            }
+        }
+        return t[0][n-1];
     }
 };
