@@ -1,28 +1,26 @@
 class Solution {
 public:
-int n;
-int m;
-int t[501][501];
-int solve(string &word1,string &word2,int i,int j){
-    if(i>=n||j>=m) return max(n-i,m-j);
-    
-    
-    if(t[i][j]!=-1) return t[i][j];
-
-
-    if(word1[i]==word2[j]) return t[i][j]= solve(word1,word2,i+1,j+1);
-
-    int x = 1+solve(word1,word2,i+1,j);
-    int y= 1+solve(word1,word2,i,j+1);
-    
-    return t[i][j]=min(x,y);
-
-}
     int minDistance(string word1, string word2) {
-        n=word1.size();
-        m=word2.size();
+        int n = word1.size();
+        int m = word2.size();
+        vector<vector<int>> t(n + 1, vector<int>(m + 1, 0));
+        
 
-        memset(t,-1,sizeof(t));
-        return solve(word1,word2,0,0);
+        for (int i = 0; i <= n; i++)
+            t[i][m] = n - i;
+        for (int j = 0; j <= m; j++)
+            t[n][j] = m - j;
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = m - 1; j >= 0; j--) {
+
+                if (word1[i] == word2[j]) {
+                    t[i][j] = t[i + 1][j + 1];
+                } else {
+                    t[i][j] = 1 + min(t[i + 1][j], t[i][j + 1]);
+                }
+            }
+        }
+        return t[0][0];
     }
 };
