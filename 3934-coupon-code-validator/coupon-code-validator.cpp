@@ -1,24 +1,44 @@
 class Solution {
 public:
-    bool isValid(string &s) {
-        if(s.empty()) return false;
-        for(char ch : s) {
-            if(!isalnum(ch) && ch != '_') return false;
-        }
-        return true;
-    }
-    vector<string> validateCoupons(vector<string>& code, vector<string>& businessLine, vector<bool>& isActive) {
-        vector<string> ans;
-        vector<pair<string, string>> arr;
-        for(int i=0; i<code.size(); i++) {
-            if(isValid(code[i]) && (businessLine[i] == "electronics" || businessLine[i] == "grocery" || businessLine[i] == "pharmacy" || businessLine[i] == "restaurant") && isActive[i]){
-                arr.push_back({businessLine[i], code[i]});
+    vector<string> validateCoupons(vector<string>& code,
+                                   vector<string>& businessLine,
+                                   vector<bool>& isActive) {
+
+        // Business line priority
+        unordered_map<string, int> priority = {
+            {"electronics", 0},
+            {"grocery", 1},
+            {"pharmacy", 2},
+            {"restaurant", 3}
+        };
+
+        vector<pair<int, string>> valid;
+
+        for (int i = 0; i < code.size(); i++) {
+            if (isActive[i] &&
+                priority.count(businessLine[i]) &&
+                isValidCode(code[i])) {
+
+                valid.push_back({priority[businessLine[i]], code[i]});
             }
         }
-        sort(arr.begin(), arr.end());
-        for(int i=0; i<arr.size(); i++) {
-            ans.push_back(arr[i].second);
+        sort(valid.begin(), valid.end());
+
+        vector<string> result;
+        for (auto &p : valid) {
+            result.push_back(p.second);
         }
-        return ans;
+
+        return result;
+    }
+
+private:
+    bool isValidCode(const string& s) {
+        if (s.empty()) return false;
+        for (char c : s) {
+            if (!isalnum(c) && c != '_')
+                return false;
+        }
+        return true;
     }
 };
